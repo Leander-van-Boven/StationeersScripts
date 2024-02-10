@@ -1,0 +1,112 @@
+# Generic definitions
+define led -53151617
+define kwmode 2
+define percmode 1
+
+# Solar definitions
+define lightsensor 1076425094
+define DaySensor HASH("Day Sensor")
+# TODO: see if there are also 'single' panels
+define solarpanel -539224550
+define longlight 797794350
+
+alias horizontal r0
+alias vertical r1
+alias isday r2
+
+# Cable definitions
+define analyzer 1036015121
+define ProdAnalyzer HASH("Prod Analyzer")
+define UseAnalyzer HASH("Use Analyzer")
+define ProdDisplay HASH("Prod Display")
+define UseDisplay HASH("Use Display")
+# TODO: optionally small station batteries as well
+define largebattery -1388288459
+define largebatmaxcharge 9000001  # joules
+define lowbattery 0.2
+define flashlight -1535893860
+define flashlightcol 4  # 4=red
+define BatAlarmLight HASH("Bat Alarm Light")
+define PercDisplay HASH("Perc Display")
+define DurDisplay HASH("Dur Display")
+
+alias prod r5
+alias use r6
+alias batcharge r7
+alias batratio r8
+alias batminimum r9
+alias batalarm r10
+alias netprod r11
+alias batdur r12
+
+setup:
+# turn all lights off
+move isday 0
+sb longlight On isday
+# set the modes of the displays
+sbn led ProdDisplay Mode kwmode
+sbn led UseDisplay Mode kwmode
+sbn led PercDisplay Mode percmode
+# set batteryalarm light color
+sbn flashlight BatAlarmLight Color flashlightcol
+
+loop:
+jal solar
+jal batteries
+yield
+j loop
+
+solar:
+# read daysensor values
+lbn horizontal lightsensor DaySensor Horizontal 2
+lbn vertical lightsensor DaySensor Vertical 2
+lbn isday lightsensor DaySensor Activate 2
+# set solarpanel angles
+sb solarpanel Horizontal horizontal
+sb solarpanel Vertical vertical
+# turn lights on if it is not day
+seqz isday isday
+sb longlight On isday
+j ra
+
+batteries:
+# read the cable and battery values
+lbn prod analyzer ProdAnalyzer PowerActual 2
+lbn use analyzer UseAnalyzer PowerActual 2
+lb batcharge largebattery Charge 0
+lb batratio largebattery Ratio 0
+lb batminimum largebattery Ratio 2
+# determine if the batteries are low
+jal batteryalarm
+# calculate duration of battery
+sub netprod prod use
+beqz netprod netprod0
+bgtz netprod netprodpos
+bltz netprod netprodneg
+netprod0:
+move batdur nan
+j batcontinue
+netprodpos:
+sub batdur largebatmaxcharge batcharge
+div batdur batdur netprod
+div batdur batdur 2  # convert ticks to seconds
+div batdur batdur 60  # convert seconds to minutes
+j batcontinue
+netprodneg:
+div batdur batcharge netprod
+div batdur batdur 2  # convert ticks to seconds
+div batdur batdur 60  # convert seconds to minutes
+# NOTE: batdur should be negative here
+j batcontinue
+batcontinue:
+# write values to displays
+sbn led ProdDisplay Setting prod
+sbn led UseDisplay Setting use
+sbn led PercDisplay Setting batratio
+sbn led DurDisplay Setting batdur
+j ra
+
+batteryalarm:
+slt batalarm batminimum lowbattery
+sbn flashlight BatAlarmLight On batalarm
+j ra
