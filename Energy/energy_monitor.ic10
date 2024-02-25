@@ -62,22 +62,18 @@ sbn DIODESLIDE BattSlide Setting battRatio
 lb battCharge BATTERY Charge 1
 sbn LEDMEDIUM BattPotential Setting battCharge
 j ra
-
 calcALARM:
 slt battAlarm battRatio BATLOWTHRESH
 sbn FLASHINGLIGHT BatAlarmLight On battAlarm
 j ra
-
 calcPROD:
 lbn prodActual ANALYZER ProdAnalyzer PowerActual 2
 sbn LEDLARGE ProdDisplay Setting prodActual
 j ra
-
 calcUSE:
 lbn useActual ANALYZER UseAnalyzer PowerActual 2
 sbn LEDLARGE UseDisplay Setting useActual
 j ra
-
 calcNETS:
 # prod
 sub prodNet prodActual useActual
@@ -126,3 +122,4 @@ move useNetSmall 0
 j useWRITE
 useWRITE:
 sbn LEDMEDIUM UseRemaining Setting useNet
+j ra
