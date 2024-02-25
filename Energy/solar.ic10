@@ -1,3 +1,4 @@
+# DEPRECATED: this script should be revisited
 # Generic definitions
 define led -815193061
 define percmode 1

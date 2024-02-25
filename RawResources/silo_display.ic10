@@ -1,0 +1,114 @@
+define Silo 1155865682
+define led -815193061
+
+loop:
+# ORES
+lbn r0 Silo HASH("Iron Silo") Quantity 2
+mul r0 r0 50
+sbn led HASH("Iron Display") Setting r0
+
+lbn r0 Silo HASH("Copper Silo") Quantity 2
+mul r0 r0 50
+sbn led HASH("Copper Display") Setting r0
+
+lbn r0 Silo HASH("Gold Silo") Quantity 2
+mul r0 r0 50
+sbn led HASH("Gold Display") Setting r0
+
+lbn r0 Silo HASH("Silicon Silo") Quantity 2
+mul r0 r0 50
+sbn led HASH("Silicon Display") Setting r0
+
+lbn r0 Silo HASH("Coal Silo") Quantity 2
+mul r0 r0 50
+sbn led HASH("Coal Display") Setting r0
+
+lbn r0 Silo HASH("Lead Silo") Quantity 2
+mul r0 r0 50
+sbn led HASH("Lead Display") Setting r0
+
+lbn r0 Silo HASH("Silver Silo") Quantity 2
+mul r0 r0 50
+sbn led HASH("Silver Display") Setting r0
+
+lbn r0 Silo HASH("Nickel Silo") Quantity 2
+mul r0 r0 50
+sbn led HASH("Nickel Display") Setting r0
+
+lbn r0 Silo HASH("Cobalt Silo") Quantity 2
+mul r0 r0 50
+sbn led HASH("Cobalt Display") Setting r0
+
+lbn r0 Silo HASH("Steel Silo") Quantity 2
+mul r0 r0 50
+sbn led HASH("Steel Display") Setting r0
+
+# BASIC INGOTS
+lbn r0 Silo HASH("Iron Ingot Silo") Quantity 2
+mul r0 r0 500
+sbn led HASH("Iron Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Copper Ingot Silo") Quantity 2
+mul r0 r0 500
+sbn led HASH("Copper Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Gold Ingot Silo") Quantity 2
+mul r0 r0 500
+sbn led HASH("Gold Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Silicon Ingot Silo") Quantity 2
+mul r0 r0 500
+sbn led HASH("Silicon Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Lead Ingot Silo") Quantity 2
+mul r0 r0 500
+sbn led HASH("Lead Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Silver Ingot Silo") Quantity 2
+mul r0 r0 500
+sbn led HASH("Silver Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Nickel Ingot Silo") Quantity 2
+mul r0 r0 500
+sbn led HASH("Nickel Ingot Display") Setting r0
+
+# ALLOY INGOTS
+lbn r0 Silo HASH("Solder Ingot Silo") Quantity 2
+mul r0 r0 250
+sbn led HASH("Solder Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Constantan Ingot Silo") Quantity 2
+mul r0 r0 250
+sbn led HASH("Constantan Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Electrum Ingot Silo") Quantity 2
+mul r0 r0 250
+sbn led HASH("Electrum Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Invar Ingot Silo") Quantity 2
+mul r0 r0 250
+sbn led HASH("Invar Ingot Display") Setting r0
+
+# SUPER ALLOY INGOTS
+lbn r0 Silo HASH("Astroloy Ingot Silo") Quantity 2
+mul r0 r0 100
+sbn led HASH("Astroloy Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Hastelloy Ingot Silo") Quantity 2
+mul r0 r0 100
+sbn led HASH("Hastelloy Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Inconel Ingot Silo") Quantity 2
+mul r0 r0 100
+sbn led HASH("Inconel Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Stellite Ingot Silo") Quantity 2
+mul r0 r0 100
+sbn led HASH("Stellite Ingot Display") Setting r0
+
+lbn r0 Silo HASH("Waspaloy Ingot Silo") Quantity 2
+mul r0 r0 100
+sbn led HASH("Waspaloy Ingot Display") Setting r0
+
+yield
+j loop

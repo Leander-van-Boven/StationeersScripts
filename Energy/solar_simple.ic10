@@ -1,0 +1,13 @@
+alias SENSOR d0
+define SOLAR -2045627372
+define SOLARVOFFSET 90
+
+loop:
+yield
+l r0 SENSOR Horizontal
+sb SOLAR Horizontal r0
+
+l r0 SENSOR Vertical
+add r0 r0 SOLARVOFFSET
+sb SOLAR Vertical r0
+j loop

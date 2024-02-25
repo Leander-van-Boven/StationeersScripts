@@ -1,0 +1,9 @@
+# Set the color of all displays in the network
+define LEDSMALL -815193061
+define LEDMEDIUM -53151617
+define LEDLARGE -1949054743
+define color 0 # Set to desired color
+
+sb LEDSMALL Color color
+sb LEDMEDIUM Color color
+sb LEDLARGE Color color

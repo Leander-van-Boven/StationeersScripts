@@ -1,0 +1,11 @@
+alias SORTER d0
+alias SWITCH d1
+alias HOUSING db
+
+loop:
+yield
+s SORTER Mode 2
+l r0 SWITCH Open
+s HOUSING Setting r0
+s SORTER Output r0
+j loop

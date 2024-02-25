@@ -1,0 +1,128 @@
+# Batch mode order: Avg, Sum, Min, Max
+# Display definitions
+define percmode 1
+define kwmode 2
+define LEDSMALL -815193061
+define LEDMEDIUM -53151617
+define LEDLARGE -1949054743
+define DIODESLIDE 576516101
+define ProdDisplay HASH("Prod Display")
+define BattDisplay HASH("Batt Display")
+define BattSlide HASH("Batt Slide")
+define UseDisplay HASH("Use Display")
+define ProdRemaining HASH("Prod Remaining")
+define ProdRemSec HASH("Prod Rem Sec")
+define BattPotential HASH("Batt Potential")
+define UseRemaining HASH("Use Remaining")
+define UseRemSec HASH("Use Rem Sec")
+# Network definitions
+define ANALYZER 1036015121
+define ProdAnalyzer HASH("Prod Analyzer")
+define UseAnalyzer HASH("Use Analyzer")
+# Battery definitions
+define BATTERY -1388288459
+define BATMAXCHARGE 9000001  # joules
+define BATLOWTHRESH 0.2
+define FLASHINGLIGHT -1535893860
+define BatAlarmLight HASH("Bat Alarm Light")
+# Aliases
+alias battRatio r0
+alias battCharge r1
+alias battMaxCharge r2
+alias battNet r3
+alias battAlarm r4
+alias prodActual r5
+alias prodNet r6
+alias prodNetSmall r7
+alias useActual r8
+alias useNet r9
+alias useNetSmall r10
+
+setup:
+sbn LEDLARGE ProdDisplay Mode kwmode
+sbn LEDLARGE BattDisplay Mode percmode
+sbn LEDLARGE UseDisplay Mode kwmode
+sbn LEDMEDIUM BattPotential Mode kwmode
+lb battMaxCharge BATTERY Maximum 1
+yield
+
+loop:
+yield
+jal calcBATTERIES
+jal calcALARM
+jal calcPROD
+jal calcUSE
+jal calcNETS
+j loop
+
+calcBATTERIES:
+lb battRatio BATTERY Ratio 0
+sbn LEDLARGE BattDisplay Setting battRatio
+sbn DIODESLIDE BattSlide Setting battRatio
+lb battCharge BATTERY Charge 1
+sbn LEDMEDIUM BattPotential Setting battCharge
+j ra
+
+calcALARM:
+slt battAlarm battRatio BATLOWTHRESH
+sbn FLASHINGLIGHT BatAlarmLight On battAlarm
+j ra
+
+calcPROD:
+lbn prodActual ANALYZER ProdAnalyzer PowerActual 2
+sbn LEDLARGE ProdDisplay Setting prodActual
+j ra
+
+calcUSE:
+lbn useActual ANALYZER UseAnalyzer PowerActual 2
+sbn LEDLARGE UseDisplay Setting useActual
+j ra
+
+calcNETS:
+# prod
+sub prodNet prodActual useActual
+bgtz prodNet prodnetPOS
+blez prodNet prodnetNEG
+prodnetPOS:
+sbn LEDLARGE BattDisplay Color 2
+sub battNet battMaxCharge battCharge
+div prodNet battNet prodNet
+div prodNet prodNet 2  # convert ticks to seconds
+div prodNet prodNet 60  # convert seconds to minutes
+move prodNetSmall prodNet
+trunc prodNet prodNet
+sub prodNetSmall prodNetSmall prodNet
+# convert frac to sec:
+mul prodNetSmall prodNetSmall 60
+trunc prodNetSmall prodNetSmall
+j prodWRITE
+prodnetNEG:
+sbn LEDLARGE BattDisplay Color 4
+move prodNet 0
+move prodNetSmall 0
+j prodWRITE
+prodWRITE:
+sbn LEDMEDIUM ProdRemaining Setting prodNet
+sbn LEDSMALL ProdRemSec Setting prodNetSmall
+# use
+sub useNet useActual prodActual
+bgtz useNet usenetPOS
+blez useNet usenetNEG
+usenetPOS:
+move battNet battCharge
+div useNet battNet useNet
+div useNet useNet 2  # convert ticks to seconds
+div useNet useNet 60  # convert seconds to minutes
+move useNetSmall useNet
+trunc useNet useNet
+sub useNetSmall useNetSmall useNet
+# convert frac to sec:
+mul useNetSmall useNetSmall 60
+trunc useNetSmall useNetSmall
+j useWRITE
+usenetNEG:
+move useNet 0
+move useNetSmall 0
+j useWRITE
+useWRITE:
+sbn LEDMEDIUM UseRemaining Setting useNet
